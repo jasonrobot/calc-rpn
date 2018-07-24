@@ -1,5 +1,6 @@
-CC=gcc
-RM=rm -f
+CC := gcc
+RM := rm -f
+DEBUGGER := gdb
 
 SRC_DIR := src
 OBJ_DIR := obj
@@ -16,11 +17,14 @@ $_CFLAGS := -g -Wall
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -g -c -o $@ $<
 
-calc: $(OBJ_FILES)
+$(BIN_FILE): $(OBJ_FILES)
 	$(CC) $(LDFLAGS) -g -o $(BIN_FILE) $(OBJ_FILES)
 
+debug: $(BIN_FILE)
+	$(DEBUGGER) $<
+
 # learning is hard!
-test: $(OBJ_FILES)
+help: $(OBJ_FILES)
 	@echo $@
 	@echo $^
 	@echo $(SRC_DIR)

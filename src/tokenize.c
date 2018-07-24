@@ -12,7 +12,7 @@ int tokenize(const char* _input_string, char** dest) {
     // thats way beyond MAX_INT
     // And we probably wont have more than like 256 tokens
     /* char** tmp = malloc(sizeof(char) * 32 * 256); */
-    dest = malloc(sizeof(char) * 32 * 256);
+    /* dest = (char**) malloc(sizeof(char*) * 256); */
     
     //track the sizes of our input, to return the minimum data
     int token_count = 0;
@@ -26,7 +26,8 @@ int tokenize(const char* _input_string, char** dest) {
     // start token count at 1, since we've got our first
     for (; token != NULL; token_count++)
     {
-        dest[token_count] = token;
+        dest[token_count] = malloc(sizeof(char) + strlen(token));
+        strcpy(dest[token_count], token);
         token = strtok(NULL, " ");
     }
 
