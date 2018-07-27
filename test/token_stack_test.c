@@ -1,7 +1,11 @@
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 #include "check.h"
 #include "stdio.h"
 
 #include "../src/token_stack.h"
+
+
 
 START_TEST (token_stack_test)
 {

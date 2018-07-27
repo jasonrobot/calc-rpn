@@ -23,18 +23,13 @@ TEST_MAIN := $(concat $(TEST_DIR) "/test_main.c")
 BIN_FILE := calc-rpn
 TEST_BIN := run-tests
 
-CFLAGS := -g -c -Wall
+CFLAGS := -g -Wall
+TEST_CFLAGS := -Wall -Wunused-function
 LDFLAGS := -g -Wall -lreadline
 TEST_LDFLAGS := -lcheck
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ $<
-
-# $(TEST_OBJ_FILES): $(TEST_SRC_FILES)
-# 	$(CC) $(CFLAGS) -o $@ $(TEST_SRC_FILES)
-
-# $(TEST_OBJS): $(TEST_FILES)
-# 	$(CC) $(CFLAGS) -o $@ $(TEST_FILES)
 
 $(BIN_FILE): $(OBJ_FILES)
 	$(CC) $(LDFLAGS) -o $(BIN_FILE) $^
@@ -42,11 +37,13 @@ $(BIN_FILE): $(OBJ_FILES)
 debug: $(BIN_FILE)
 	$(DEBUGGER) $<
 
-$(TEST_BIN): $(TEST_OBJ_FILES) $(TEST_FILES) $(TEST_MAIN)
+$(TEST_BIN): $(TEST_SRC_FILES) $(TEST_FILES) $(TEST_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_LDFLAGS) $^ -o $(TEST_BIN)
 
 check: $(TEST_BIN)
+	@echo
 	./$<
+	@echo
 
 # learning is hard!
 help: $(OBJ_FILES)
@@ -59,6 +56,7 @@ help: $(OBJ_FILES)
 
 clean: 
 	$(RM) $(OBJ_FILES)
+	$(RM) $(TEST_BIN)
 
 cleanall: clean
 	$(RM) $(BIN_FILE)
