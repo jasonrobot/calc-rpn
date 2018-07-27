@@ -12,6 +12,7 @@ INC_FILES := $(wildcard $(SRC_DIR)/*.h)
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o ,$(SRC_FILES))
 
+# TEST_SRC_FILES := $(patsubst ".c", , $(patsubst $(MAIN_FILE), , $(wildcard $(SRC_DIR)/*.c)) $(wildcard $(TEST_DIR)/*.c))
 TEST_SRC_FILES := $(patsubst $(MAIN_FILE), , $(wildcard $(SRC_DIR)/*.c)) $(wildcard $(TEST_DIR)/*.c)
 TEST_OBJ_FILES := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o ,$(TEST_SRC_FILES))
 
@@ -29,14 +30,20 @@ TEST_LDFLAGS := -lcheck
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ $<
 
+# $(TEST_OBJ_FILES): $(TEST_SRC_FILES)
+# 	$(CC) $(CFLAGS) -o $@ $(TEST_SRC_FILES)
+
+# $(TEST_OBJS): $(TEST_FILES)
+# 	$(CC) $(CFLAGS) -o $@ $(TEST_FILES)
+
 $(BIN_FILE): $(OBJ_FILES)
 	$(CC) $(LDFLAGS) -o $(BIN_FILE) $^
 
 debug: $(BIN_FILE)
 	$(DEBUGGER) $<
 
-$(TEST_BIN): $(TEST_FILES) $(OBJ_FILES)
-	$(CC) $(LDFLAGS) $(TEST_LDFLAGS) $(OBJ_FILES) $(TEST_MAIN) "./test/test_main.c" -o $(TEST_BIN)
+$(TEST_BIN): $(TEST_OBJ_FILES) $(TEST_FILES) $(TEST_MAIN)
+	$(CC) $(LDFLAGS) $(TEST_LDFLAGS) $^ -o $(TEST_BIN)
 
 check: $(TEST_BIN)
 	./$<

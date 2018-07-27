@@ -14,6 +14,7 @@ Suite * money_suite(void)
     tc_core = tcase_create("Core");
      
     tcase_add_test(tc_core, token_stack_test);
+    tcase_add_test(tc_core, token_stack_push);
     suite_add_tcase(s, tc_core);
      
     return s;
