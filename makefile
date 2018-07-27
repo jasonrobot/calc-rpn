@@ -6,15 +6,21 @@ SRC_DIR := src
 TEST_DIR := test
 OBJ_DIR := obj
 
+MAIN_FILE := $(SRC_DIR)/main.c
+
 INC_FILES := $(wildcard $(SRC_DIR)/*.h)
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o ,$(SRC_FILES))
+
+TEST_SRC_FILES := $(patsubst $(MAIN_FILE), , $(wildcard $(SRC_DIR)/*.c)) $(wildcard $(TEST_DIR)/*.c)
+TEST_OBJ_FILES := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o ,$(TEST_SRC_FILES))
+
 TEST_FILES := $(wildcard $(TEST_DIR)/*.c)
-OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
-# TEST_OBJ_FILES := $(patsubst $(TEST_DIR)/%.c,$(OBJ_DIR)/%.o,$(TEST_FILES))
+TEST_OBJS := $(patsubst $(TEST_DIR)/%.c,$(OBJ_DIR)/%.o,$(TEST_FILES))
 TEST_MAIN := $(concat $(TEST_DIR) "/test_main.c")
 
 BIN_FILE := calc-rpn
-TEST_BIN := run_tests
+TEST_BIN := run-tests
 
 CFLAGS := -g -c -Wall
 LDFLAGS := -g -Wall -lreadline
@@ -24,28 +30,25 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ $<
 
 $(BIN_FILE): $(OBJ_FILES)
-	$(CC) $(LDFLAGS) -o $(BIN_FILE) $(OBJ_FILES)
+	$(CC) $(LDFLAGS) -o $(BIN_FILE) $^
 
 debug: $(BIN_FILE)
 	$(DEBUGGER) $<
 
-$(TEST_BIN): $(TEST_FILES)
-	$(CC) $(LDFLAGS) $(TEST_LDFLAGS) $(TEST_MAIN) "./test/test_main.c" -o $(TEST_BIN)
+$(TEST_BIN): $(TEST_FILES) $(OBJ_FILES)
+	$(CC) $(LDFLAGS) $(TEST_LDFLAGS) $(OBJ_FILES) $(TEST_MAIN) "./test/test_main.c" -o $(TEST_BIN)
 
 check: $(TEST_BIN)
 	./$<
 
 # learning is hard!
 help: $(OBJ_FILES)
-	@echo $@
-	@echo $^
-	@echo $(SRC_DIR)
 	@echo $(SRC_FILES)
-	@echo $(wildcard $(SRC_DIR)/*.c)
-	@echo $(OBJ_DIR)
 	@echo $(OBJ_FILES)
-	@echo $(CFLAGS)
-	@echo $(LDFLAGS)
+	@echo $(TEST_SRC_FILES)
+	@echo $(TEST_OBJ_FILES)
+	@echo $(TEST_FILES)
+	@echo $(TEST_OBJS)
 
 clean: 
 	$(RM) $(OBJ_FILES)

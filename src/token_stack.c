@@ -1,36 +1,35 @@
 #include "stdlib.h"
 
+#include "token_stack.h"
+
 #define STACK_SIZE 32
-
-typedef struct TokenStackFrame_s
-{
-    char* token;
-} TokenStackFrame;
-
-typedef struct TokenStack_s
-{
-    TokenStackFrame* top;
-    TokenStackFrame frames[STACK_SIZE];
-} TokenStack;
-
 /*
  * Return a new, initialized token stack.
  */
-TokenStack new_token_stack()
+TokenStack* new_token_stack()
 {
-    TokenStack stack;
-    stack.top = stack.frames;
+    TokenStack* stack = malloc(sizeof(TokenStack));
+    stack->top_idx = 0;
     return stack;
 }
 
-char* pop_token(TokenStack stack)
+char* pop_token(TokenStack* stack)
 {
-    char* result = stack.top->token;
-    stack.top = stack.top - sizeof(TokenStackFrame);
+    char* result = stack->frames[stack->top_idx].token;
+    stack->top_idx -= 1;
     return result;
 }
 
-int push_token(TokenStack stack, char* token)
+/*
+ * Push a token to a stack. 
+ */ 
+int push_token(TokenStack* stack, char* token)
 {
-    
+    if (stack->top_idx >= STACK_SIZE)
+    {
+        return 1;
+    }
+    stack->top_idx += 1;
+    stack->frames[stack->top_idx].token = token;
+    return 0;
 }
