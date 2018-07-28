@@ -36,14 +36,46 @@ void process_token(char* token, TokenStack* stack)
         {
             value a = pop_token(stack);
             value b = pop_token(stack);
+            printf("%g + %g = %g\n", a, b, a + b);
             push_token(stack, a + b);
+        }
+    }
+    else if (strcmp(token, "-") == 0)
+    {
+        if (stack_size(stack) >= 2)
+        {
+            //we want to do the second to the top, minus the top, so:
+            //3 2 - => 1, a b - => (a - b)
+            value b = pop_token(stack);
+            value a = pop_token(stack);
+            push_token(stack, a - b);
+        }
+    }
+    else if (strcmp(token, "*") == 0)
+    {
+        if (stack_size(stack) >= 2)
+        {
+        
+            value a = pop_token(stack);
+            value b = pop_token(stack);
+            push_token(stack, a * b);
+        }
+    }
+    else if (strcmp(token, "/") == 0)
+    {
+        if (stack_size(stack) >= 2)
+        {
+            //same as minus, take b then a
+            value b = pop_token(stack);
+            value a = pop_token(stack);
+            push_token(stack, a / b);
         }
     }
     else
     {
         //FIXME handle error of parsing
         value val = strtod(token, NULL);
-        printf("pushing %f to %d\n", val, stack);
+        printf("pushing %f to %u\n", val, stack);
         push_token(stack, val);
     }
 }
@@ -90,9 +122,9 @@ int main(int argc, char* argv[])
 
     while (quit == 0)
     {
-        quit = get_input(token_stack);
         printf("stack size is %d\n", stack_size(token_stack));
         print_stack(token_stack);
+        quit = get_input(token_stack);
     }
   
     return EXIT_SUCCESS;

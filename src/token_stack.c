@@ -31,8 +31,8 @@ value pop_token(TokenStack* stack)
         return 0;
     }
     
-    value result = stack->frames[stack->top_idx].token;
     stack->top_idx -= 1;
+    value result = stack->frames[stack->top_idx].token;
     return result;
 }
 
@@ -48,8 +48,8 @@ int push_token(TokenStack* stack, value token)
     {
         return 1;
     }
-    stack->top_idx += 1;
     stack->frames[stack->top_idx].token = token;
+    stack->top_idx += 1;
     return 0;
 }
 
@@ -61,8 +61,9 @@ int stack_size(TokenStack* stack)
 void print_stack(TokenStack* stack)
 {
     printf("stack: ");
-    for (int i = 0; i <= stack->top_idx; i++)
+    for (int i = 0; i < stack->top_idx; i++)
     {
-        printf("%f ", stack->frames[i].token);
+        printf("%g ", stack->frames[i].token);
     }
+    printf("\n");
 }
