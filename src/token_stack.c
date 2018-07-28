@@ -1,4 +1,5 @@
 #include "stdlib.h"
+#include "stdio.h"
 
 #include "token_stack.h"
 
@@ -20,16 +21,17 @@ TokenStack* new_token_stack()
  * Pop the token off the top of the stack.
  *
  * @param stack TokenStack* the stack to pop from
- * @return char* the token popped or NULL
+ * @return value the token popped or NULL
  */ 
-char* pop_token(TokenStack* stack)
+value pop_token(TokenStack* stack)
 {
     if (stack->top_idx <= 0)
     {
-        return NULL;
+        //FIXME should error
+        return 0;
     }
     
-    char* result = stack->frames[stack->top_idx].token;
+    value result = stack->frames[stack->top_idx].token;
     stack->top_idx -= 1;
     return result;
 }
@@ -38,9 +40,9 @@ char* pop_token(TokenStack* stack)
  * Push a token to a stack.
  *
  * @param stack TokenStack* the stack to push to.
- * @param token char* the token to push on the stack.
+ * @param token value the token to push on the stack.
  */ 
-int push_token(TokenStack* stack, char* token)
+int push_token(TokenStack* stack, value token)
 {
     if (stack->top_idx >= STACK_SIZE - 1)
     {
@@ -49,4 +51,18 @@ int push_token(TokenStack* stack, char* token)
     stack->top_idx += 1;
     stack->frames[stack->top_idx].token = token;
     return 0;
+}
+
+int stack_size(TokenStack* stack)
+{
+    return stack->top_idx;
+}
+
+void print_stack(TokenStack* stack)
+{
+    printf("stack: ");
+    for (int i = 0; i <= stack->top_idx; i++)
+    {
+        printf("%f ", stack->frames[i].token);
+    }
 }

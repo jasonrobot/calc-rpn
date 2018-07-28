@@ -4,9 +4,11 @@
 
 #define STACK_SIZE 32
 
+typedef double value;
+
 typedef struct TokenStackFrame_s
 {
-    char* token;
+    value token;
 } TokenStackFrame;
 
 typedef struct TokenStack_s
@@ -16,5 +18,7 @@ typedef struct TokenStack_s
 } TokenStack;
 
 TokenStack* new_token_stack();
-char* pop_token(TokenStack* stack);
-int push_token(TokenStack* stack, char* token);
+value pop_token(TokenStack* stack);
+int push_token(TokenStack* stack, value token);
+int stack_size(TokenStack* stack);
+void print_stack(TokenStack* stack);

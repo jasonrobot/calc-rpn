@@ -20,7 +20,7 @@ TEST_FILES := $(wildcard $(TEST_DIR)/*.c)
 BIN_FILE := calc-rpn
 TEST_BIN := run-tests
 
-CFLAGS := -g -Wall
+CFLAGS := -c -g -Wall
 
 LDFLAGS := -g -Wall -lreadline
 TEST_LDFLAGS := -lcheck

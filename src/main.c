@@ -3,6 +3,7 @@
 #include "readline/readline.h"
 
 #include "tokenize.h"
+#include "token_stack.h"
 
 int should_quit(char* input)
 {
@@ -25,12 +26,34 @@ int should_quit(char* input)
     return 0;
 }
 
+void process_token(char* token, TokenStack* stack)
+{
+    //token is a function
+    if (strcmp(token, "+") == 0)
+    {
+        printf("token is +\n");
+        if (stack_size(stack) >= 2)
+        {
+            value a = pop_token(stack);
+            value b = pop_token(stack);
+            push_token(stack, a + b);
+        }
+    }
+    else
+    {
+        //FIXME handle error of parsing
+        value val = strtod(token, NULL);
+        printf("pushing %f to %d\n", val, stack);
+        push_token(stack, val);
+    }
+}
+
 /*
  * Get a line of input from readline
  *
  * @return boolean whether or not to quit
  */
-int get_input() {
+int get_input(TokenStack* stack) {
     char* line = readline(": ");
 
     if (should_quit(line))
@@ -53,6 +76,7 @@ int get_input() {
     for (int i = 0; i < token_count; i++)
     {
         printf("%s\n", tokens[i]);
+        process_token(tokens[i], stack);
     }
 
     return 0;
@@ -60,11 +84,16 @@ int get_input() {
 
 int main(int argc, char* argv[])
 {
-    int quit;
-    do
+    // set up all the initial variables
+    int quit = 0;
+    TokenStack* token_stack = new_token_stack();
+
+    while (quit == 0)
     {
-        quit = get_input();
-    } while (quit == 0);
+        quit = get_input(token_stack);
+        printf("stack size is %d\n", stack_size(token_stack));
+        print_stack(token_stack);
+    }
   
     return EXIT_SUCCESS;
 }
