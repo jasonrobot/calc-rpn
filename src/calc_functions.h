@@ -18,7 +18,15 @@ typedef struct CalcFunc_s
     int (*logic)();
 } CalcFunc;
 
+void make_calc_func(CalcFunc* calc_func, int (*function)(), int argc, int retc);
+void call_calc_func(CalcFunc* func, TokenStack* stack);
+
 int add(value, value, value*);
+int subtract(value, value, value*);
+int multiply(value, value, value*);
+int divide(value, value, value*);
+
 int swap(value, value, value*);
+int drop();
 
 #endif

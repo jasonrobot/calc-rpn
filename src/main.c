@@ -27,103 +27,52 @@ int should_quit(char* input)
     return 0;
 }
 
-void call_calc_func(CalcFunc* func, TokenStack* stack)
-{
-    value ret_vals[func->retc];
-    /* int error = func->logic(pop_token(stack), pop_token(stack), &ret_vals); */
-    //TODO handle too few args
-    if (func->argc > stack_size(stack))
-    {
-        return;
-    }
-    //TODO default to some error state
-    int error = 0;
-    switch(func->argc)
-    {
-    case 0:
-        error = call_0(func->logic, stack, ret_vals);
-        break;
-    case 1:
-        error = call_1(func->logic, stack, ret_vals);
-        break;
-    case 2:
-        error = call_2(func->logic, stack, ret_vals);
-        break;
-    case 3:
-        error = call_3(func->logic, stack, ret_vals);
-        break;
-    case 4:
-        error = call_4(func->logic, stack, ret_vals);
-        break;
-    default:
-        break;
-    }
-    if (error)
-    {
-        //TODO handle error
-    }
-    for (int i = 0; i < func->retc; i++)
-    {
-        push_token(stack, ret_vals[i]);
-    }
-}
-
 void process_token(char* token, TokenStack* stack)
-{    
+{
+    CalcFunc func;
+
     //token is a function
     if (strcmp(token, "+") == 0)
     {
-        CalcFunc plus_func;
-        plus_func.argc = 2;
-        plus_func.retc = 1;
-        plus_func.logic = add;
-        
-        call_calc_func(&plus_func, stack);
+        make_calc_func(&func, add, 2, 1);      
+        call_calc_func(&func, stack);
     }
     else if (strcmp(token, "-") == 0)
     {
-        if (stack_size(stack) >= 2)
-        {
-            //we want to do the second to the top, minus the top, so:
-            //3 2 - => 1, a b - => (a - b)
-            value b = pop_token(stack);
-            value a = pop_token(stack);
-            push_token(stack, a - b);
-        }
+        make_calc_func(&func, subtract, 2, 1);      
+        call_calc_func(&func, stack);
+        
     }
     else if (strcmp(token, "*") == 0)
     {
-        if (stack_size(stack) >= 2)
-        {        
-            value a = pop_token(stack);
-            value b = pop_token(stack);
-            push_token(stack, a * b);
-        }
+        make_calc_func(&func, multiply, 2, 1);      
+        call_calc_func(&func, stack);
     }
     else if (strcmp(token, "/") == 0)
     {
-        if (stack_size(stack) >= 2)
-        {
-            //same as minus, take b then a
-            value b = pop_token(stack);
-            value a = pop_token(stack);
-            push_token(stack, a / b);
-        }
+        make_calc_func(&func, divide, 2, 1);      
+        call_calc_func(&func, stack);        
     }
     else if (strcmp(token, "swap") == 0)
     {
-        CalcFunc swap_func;
-        swap_func.argc = 2;
-        swap_func.retc = 2;
-        swap_func.logic = swap;
-
-        call_calc_func(&swap_func, stack);
+        make_calc_func(&func, swap, 2, 1);      
+        call_calc_func(&func, stack);
+    }
+    else if (strcmp(token, "drop") == 0)
+    {
+        make_calc_func(&func, drop, 1, 0);
+        call_calc_func(&func, stack);
+    }
+    else if (strcmp(token, "clear") == 0)
+    {
+        make_calc_func(&func, drop, stack_size(stack), 0);      
+        call_calc_func(&func, stack);
     }
     else
     {
         //FIXME handle error of parsing
         value val = strtod(token, NULL);
-        printf("pushing %f to %u\n", val, stack);
+        /* printf("pushing %f to %u\n", val, stack); */
         push_token(stack, val);
     }
 }
