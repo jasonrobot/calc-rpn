@@ -28,19 +28,25 @@ int should_quit(char* input)
 
 typedef struct CalcFunc_s
 {
-    int argv;
     char* name;
-    value (*func)();
+    int argc;
+    int retc;
+    /* value retv[16]; */
+    int (*logic)();
 } CalcFunc;
 
+/*
 int do_func(TokenStack* stack, CalcFunc* func)
 {
-    if(stack_size(stack) >= func->argv)
+    if(stack_size(stack) >= func->argc)
     {
-        
+        value a = pop_token(stack);
+        value b = pop_token(stack);
+        value retv[func->retc] = func->logic(a, b);
         push_token(stack,
                    func->func(pop_token(stack),
                               pop_token(stack)));
+        
         return 0;
     }
     else
@@ -48,32 +54,80 @@ int do_func(TokenStack* stack, CalcFunc* func)
         return 1;
     }
 }
+*/
 
-value add(value b, value a)
+#define call_0(action, stack, ret_vals) action(ret_vals);
+#define call_1(action, stack, ret_vals) action(pop_token(stack), ret_vals);
+#define call_2(action, stack, ret_vals) action(pop_token(stack), pop_token(stack), ret_vals);
+#define call_3(action, stack, ret_vals) action(pop_token(stack), pop_token(stack), pop_token(stack), ret_vals);
+#define call_4(action, stack, ret_vals) action(pop_token(stack), pop_token(stack), pop_token(stack), pop_token(stack), ret_vals);
+
+void call_calc_func(CalcFunc* func, TokenStack* stack)
 {
-    return a + b;
+    value ret_vals[func->retc];
+    /* int error = func->logic(pop_token(stack), pop_token(stack), &ret_vals); */
+    //TODO handle too few args
+    if (func->argc > stack_size(stack))
+    {
+        return;
+    }
+    //TODO default to some error state
+    int error = 0;
+    switch(func->argc)
+    {
+    case 0:
+        error = call_0(func->logic, stack, ret_vals);
+        break;
+    case 1:
+        error = call_1(func->logic, stack, ret_vals);
+        break;
+    case 2:
+        error = call_2(func->logic, stack, ret_vals);
+        break;
+    case 3:
+        error = call_3(func->logic, stack, ret_vals);
+        break;
+    case 4:
+        error = call_4(func->logic, stack, ret_vals);
+        break;
+    default:
+        break;
+    }
+    /* int error = call_2(func->logic, stack); */
+    if (error)
+    {
+        //TODO handle error
+    }
+    for (int i = 0; i < func->retc; i++)
+    {
+        push_token(stack, ret_vals[i]);
+    }
+}
+
+int add(value b, value a, value* ret)
+{
+    *ret = a + b;
+    return EXIT_SUCCESS;
+}
+
+int swap(value a, value b, value* ret)
+{
+    ret[0] = b;
+    ret[1] = a;
+    return EXIT_SUCCESS;
 }
 
 void process_token(char* token, TokenStack* stack)
-{
-    
-    
+{    
     //token is a function
     if (strcmp(token, "+") == 0)
     {
         CalcFunc plus_func;
-        plus_func.argv = 2;
-        plus_func.func = plus;
+        plus_func.argc = 2;
+        plus_func.retc = 1;
+        plus_func.logic = add;
         
-        do_func(stack, &plus_func);
-        /* printf("token is +\n"); */
-        /* if (stack_size(stack) >= 2) */
-        /* { */
-        /*     value a = pop_token(stack); */
-        /*     value b = pop_token(stack); */
-        /*     printf("%g + %g = %g\n", a, b, a + b); */
-        /*     push_token(stack, a + b); */
-        /* } */
+        call_calc_func(&plus_func, stack);
     }
     else if (strcmp(token, "-") == 0)
     {
@@ -89,8 +143,7 @@ void process_token(char* token, TokenStack* stack)
     else if (strcmp(token, "*") == 0)
     {
         if (stack_size(stack) >= 2)
-        {
-        
+        {        
             value a = pop_token(stack);
             value b = pop_token(stack);
             push_token(stack, a * b);
@@ -105,6 +158,15 @@ void process_token(char* token, TokenStack* stack)
             value a = pop_token(stack);
             push_token(stack, a / b);
         }
+    }
+    else if (strcmp(token, "swap") == 0)
+    {
+        CalcFunc swap_func;
+        swap_func.argc = 2;
+        swap_func.retc = 2;
+        swap_func.logic = swap;
+
+        call_calc_func(&swap_func, stack);
     }
     else
     {
