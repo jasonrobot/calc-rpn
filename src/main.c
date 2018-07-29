@@ -4,6 +4,7 @@
 
 #include "tokenize.h"
 #include "token_stack.h"
+#include "calc_functions.h"
 
 int should_quit(char* input)
 {
@@ -25,42 +26,6 @@ int should_quit(char* input)
 
     return 0;
 }
-
-typedef struct CalcFunc_s
-{
-    char* name;
-    int argc;
-    int retc;
-    /* value retv[16]; */
-    int (*logic)();
-} CalcFunc;
-
-/*
-int do_func(TokenStack* stack, CalcFunc* func)
-{
-    if(stack_size(stack) >= func->argc)
-    {
-        value a = pop_token(stack);
-        value b = pop_token(stack);
-        value retv[func->retc] = func->logic(a, b);
-        push_token(stack,
-                   func->func(pop_token(stack),
-                              pop_token(stack)));
-        
-        return 0;
-    }
-    else
-    {
-        return 1;
-    }
-}
-*/
-
-#define call_0(action, stack, ret_vals) action(ret_vals);
-#define call_1(action, stack, ret_vals) action(pop_token(stack), ret_vals);
-#define call_2(action, stack, ret_vals) action(pop_token(stack), pop_token(stack), ret_vals);
-#define call_3(action, stack, ret_vals) action(pop_token(stack), pop_token(stack), pop_token(stack), ret_vals);
-#define call_4(action, stack, ret_vals) action(pop_token(stack), pop_token(stack), pop_token(stack), pop_token(stack), ret_vals);
 
 void call_calc_func(CalcFunc* func, TokenStack* stack)
 {
@@ -93,7 +58,6 @@ void call_calc_func(CalcFunc* func, TokenStack* stack)
     default:
         break;
     }
-    /* int error = call_2(func->logic, stack); */
     if (error)
     {
         //TODO handle error
@@ -102,19 +66,6 @@ void call_calc_func(CalcFunc* func, TokenStack* stack)
     {
         push_token(stack, ret_vals[i]);
     }
-}
-
-int add(value b, value a, value* ret)
-{
-    *ret = a + b;
-    return EXIT_SUCCESS;
-}
-
-int swap(value a, value b, value* ret)
-{
-    ret[0] = b;
-    ret[1] = a;
-    return EXIT_SUCCESS;
 }
 
 void process_token(char* token, TokenStack* stack)

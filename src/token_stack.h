@@ -1,6 +1,8 @@
 /*
  * token_stack represents a stack of tokens to do calculations with 
  */ 
+#ifndef TOKEN_STACK_H
+#define TOKEN_STACK_H
 
 #define STACK_SIZE 32
 
@@ -22,3 +24,5 @@ value pop_token(TokenStack* stack);
 int push_token(TokenStack* stack, value token);
 int stack_size(TokenStack* stack);
 void print_stack(TokenStack* stack);
+
+#endif
