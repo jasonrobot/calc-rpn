@@ -26,19 +26,54 @@ int should_quit(char* input)
     return 0;
 }
 
+typedef struct CalcFunc_s
+{
+    int argv;
+    char* name;
+    value (*func)();
+} CalcFunc;
+
+int do_func(TokenStack* stack, CalcFunc* func)
+{
+    if(stack_size(stack) >= func->argv)
+    {
+        
+        push_token(stack,
+                   func->func(pop_token(stack),
+                              pop_token(stack)));
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+}
+
+value add(value b, value a)
+{
+    return a + b;
+}
+
 void process_token(char* token, TokenStack* stack)
 {
+    
+    
     //token is a function
     if (strcmp(token, "+") == 0)
     {
-        printf("token is +\n");
-        if (stack_size(stack) >= 2)
-        {
-            value a = pop_token(stack);
-            value b = pop_token(stack);
-            printf("%g + %g = %g\n", a, b, a + b);
-            push_token(stack, a + b);
-        }
+        CalcFunc plus_func;
+        plus_func.argv = 2;
+        plus_func.func = plus;
+        
+        do_func(stack, &plus_func);
+        /* printf("token is +\n"); */
+        /* if (stack_size(stack) >= 2) */
+        /* { */
+        /*     value a = pop_token(stack); */
+        /*     value b = pop_token(stack); */
+        /*     printf("%g + %g = %g\n", a, b, a + b); */
+        /*     push_token(stack, a + b); */
+        /* } */
     }
     else if (strcmp(token, "-") == 0)
     {
