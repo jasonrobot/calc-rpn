@@ -68,6 +68,11 @@ void process_token(char* token, TokenStack* stack)
         make_calc_func(&func, drop, stack_size(stack), 0);      
         call_calc_func(&func, stack);
     }
+    else if (strcmp(token, "dup") == 0)
+    {
+        make_calc_func(&func, dup, 1, 2);
+        call_calc_func(&func, stack);        
+    }
     else
     {
         //FIXME handle error of parsing

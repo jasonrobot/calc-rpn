@@ -99,3 +99,9 @@ int drop()
     return EXIT_SUCCESS;
 }
 
+int dup(value a, value* ret)
+{
+    ret[0] = a;
+    ret[1] = a;
+    return EXIT_SUCCESS;
+}

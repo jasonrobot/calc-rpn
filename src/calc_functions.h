@@ -28,5 +28,6 @@ int divide(value, value, value*);
 
 int swap(value, value, value*);
 int drop();
+int dup(value, value*);
 
 #endif
