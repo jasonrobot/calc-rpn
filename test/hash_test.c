@@ -34,8 +34,7 @@ END_TEST
 START_TEST(test_basic_usage)
 {
     FuncHashMap map;
-    // dont need a big one
-    map.size = 64;
+    init_hash_map(&map, 64);
 
     CalcFunc func;
     char* name = "function";
@@ -59,7 +58,13 @@ START_TEST(test_insert_collision)
 END_TEST
 
 START_TEST(test_get_unset_key)
-{}
+{
+    FuncHashMap map;
+    init_hash_map(&map, 64);
+    
+    CalcFunc* result = hash_get(&map, "foobar");
+    ck_assert_ptr_null(result);
+}
 END_TEST
 
 /*

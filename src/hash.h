@@ -19,6 +19,7 @@ typedef struct FuncHashMap_s
     FuncMapEntry** map;
 } FuncHashMap;
 
+void init_hash_map(FuncHashMap*, size_t);
 size_t hash_hash(char* key, size_t size);
 void hash_put(FuncHashMap*, char* name, CalcFunc* func);
 CalcFunc* hash_get(FuncHashMap*, char* name);

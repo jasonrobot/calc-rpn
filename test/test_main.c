@@ -21,6 +21,7 @@ Suite * money_suite(void)
     tcase_add_test(tc_core, test_hash_function);
     tcase_add_test(tc_core, test_hash_function_doesnt_suck);
     tcase_add_test(tc_core, test_basic_usage);
+    tcase_add_test(tc_core, test_get_unset_key);
     
     suite_add_tcase(s, tc_core);
      

@@ -5,6 +5,7 @@
 #include "tokenize.h"
 #include "token_stack.h"
 #include "calc_functions.h"
+#include "hash.h"
 
 enum CalcError
 {
@@ -34,7 +35,7 @@ int should_quit(char* input)
     return 0;
 }
 
-void process_token(char* token, TokenStack* stack)
+void process_token(char* token, TokenStack* stack, FuncHashMap function_map)
 {
     CalcFunc func;
 
