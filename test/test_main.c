@@ -2,6 +2,7 @@
 #include "stdlib.h"
 
 #include "token_stack_test.c"
+#include "hash_test.c"
 
 Suite * money_suite(void)
 {
@@ -17,6 +18,10 @@ Suite * money_suite(void)
     tcase_add_test(tc_core, stack_overflow_test);
     tcase_add_test(tc_core, pop_empty_stack);
 
+    tcase_add_test(tc_core, test_hash_function);
+    tcase_add_test(tc_core, test_hash_function_doesnt_suck);
+    tcase_add_test(tc_core, test_basic_usage);
+    
     suite_add_tcase(s, tc_core);
      
     return s;
