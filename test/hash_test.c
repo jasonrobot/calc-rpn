@@ -22,6 +22,9 @@ START_TEST(test_hash_function_doesnt_suck)
     size_t result = hash_hash("as", 64);
     size_t result_2 = hash_hash("sa", 64);
     ck_assert_uint_ne(result, result_2);
+
+    result = hash_hash("x", 64);
+    ck_assert_uint_ne(result, 0);
 }
 END_TEST
 

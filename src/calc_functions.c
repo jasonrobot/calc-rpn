@@ -3,11 +3,13 @@
 #include "token_stack.h"
 #include "calc_functions.h"
 
-void make_calc_func(CalcFunc* calc_func, int (*function)(), int argc, int retc)
+CalcFunc* make_calc_func(int (*function)(), int argc, int retc)
 {
+    CalcFunc* calc_func = malloc(sizeof(CalcFunc));
     calc_func->argc = argc;
     calc_func->retc = retc;
     calc_func->logic = function;
+    return calc_func;
 }
 
 /*

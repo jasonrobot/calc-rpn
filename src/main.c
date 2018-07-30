@@ -35,11 +35,10 @@ int should_quit(char* input)
     return 0;
 }
 
-void process_token(char* token, TokenStack* stack, FuncHashMap function_map)
+void process_token(char* token, TokenStack* stack, FuncHashMap* function_map)
 {
-    CalcFunc func;
-
     //token is a function
+    /*
     if (strcmp(token, "+") == 0)
     {
         make_calc_func(&func, add, 2, 1);      
@@ -49,7 +48,15 @@ void process_token(char* token, TokenStack* stack, FuncHashMap function_map)
     {
         make_calc_func(&func, subtract, 2, 1);      
         call_calc_func(&func, stack);
+    } 
+*/
+    CalcFunc *func_ptr = NULL;
+    func_ptr = hash_get(function_map ,token);
+    if (func_ptr != NULL)
+    {
+        call_calc_func(func_ptr, stack);
     }
+    /*
     else if (strcmp(token, "*") == 0)
     {
         make_calc_func(&func, multiply, 2, 1);      
@@ -72,7 +79,7 @@ void process_token(char* token, TokenStack* stack, FuncHashMap function_map)
     }
     else if (strcmp(token, "clear") == 0)
     {
-        make_calc_func(&func, drop, stack_size(stack), 0);      
+        make_calc_func(&func, drop, stack_size(stack), 0);
         call_calc_func(&func, stack);
     }
     else if (strcmp(token, "dup") == 0)
@@ -80,6 +87,7 @@ void process_token(char* token, TokenStack* stack, FuncHashMap function_map)
         make_calc_func(&func, dup, 1, 2);
         call_calc_func(&func, stack);        
     }
+    */
     else
     {
         //FIXME handle error of parsing
@@ -101,19 +109,13 @@ void process_token(char* token, TokenStack* stack, FuncHashMap function_map)
 /*
  * Get a line of input from readline
  *
- * @return boolean whether or not to quit
+ * @return the number of tokens read
  */
-int get_input(TokenStack* stack) {
+int get_input(char** tokens) {
     char* line = readline(": ");
-
-    if (should_quit(line))
-    {
-        return 1;
-    }
     
     printf("\n%s\n", line);
 
-    char** tokens = malloc(sizeof(char*) * 256);
     int token_count = 0;
     token_count = tokenize(line, tokens);
 
@@ -121,18 +123,38 @@ int get_input(TokenStack* stack) {
     {
         printf("failed to parse\n");
         /* return EXIT_FAILURE; */
-    }
+        return 0;
+    }    
 
-    for (int i = 0; i < token_count; i++)
-    {
-        printf("%s\n", tokens[i]);
-        process_token(tokens[i], stack);
-        free(tokens[i]);
-    }
+    return token_count;
+}
 
-    free(tokens);
+void setup_functions(FuncHashMap* map)
+{
+    CalcFunc* func = NULL;
+    make_calc_func(add, 2, 1);      
+    hash_put(map, "+", func);
+    
+    make_calc_func(subtract, 2, 1);      
+    hash_put(map, "-", func);
 
-    return 0;
+    make_calc_func(multiply, 2, 1);      
+    hash_put(map, "*", func);
+
+    make_calc_func(divide, 2, 1);      
+    hash_put(map, "/", func);
+
+    make_calc_func(swap, 2, 1);      
+    hash_put(map, "swap", func);
+
+    make_calc_func(drop, 1, 0);      
+    hash_put(map, "drop", func);
+
+    make_calc_func(drop, 0, 0);
+    hash_put(map, "clear", func);
+
+    make_calc_func(dup, 1, 2);      
+    hash_put(map, "dup", func);
 }
 
 int main(int argc, char* argv[])
@@ -140,12 +162,33 @@ int main(int argc, char* argv[])
     // set up all the initial variables
     int quit = 0;
     TokenStack* token_stack = new_token_stack();
+    FuncHashMap function_map;
+    init_hash_map(&function_map, 512);
+
+    setup_functions(&function_map);
 
     while (quit == 0)
     {
+        //if you're inputting more than 256 tokens at a time, I pity you
+        char* tokens[256];
         printf("stack size is %d\n", stack_size(token_stack));
         print_stack(token_stack);
-        quit = get_input(token_stack);
+        
+        int token_count = get_input(tokens);
+        if (should_quit(tokens[0]))
+        {
+            return EXIT_SUCCESS;
+        }
+        if ( token_count > 0)
+        {
+            for (int i = 0; i < token_count; i++)
+            {
+                printf("%s\n", tokens[i]);
+                process_token(tokens[i], token_stack, &function_map);
+                free(tokens[i]);
+            }
+
+        }
     }
 
     return EXIT_SUCCESS;

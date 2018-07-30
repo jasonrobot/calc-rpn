@@ -15,7 +15,7 @@ size_t hash_hash(char* key, size_t size)
     for (int i = 0; key[i] != '\0'; i++)
     {
         hash_val += (size_t) key[i];
-        hash_val *= i;
+        hash_val *= i + 2;
     }
     return hash_val % size;
 }
