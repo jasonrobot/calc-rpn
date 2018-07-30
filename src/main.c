@@ -6,6 +6,13 @@
 #include "token_stack.h"
 #include "calc_functions.h"
 
+enum CalcError
+{
+    NUMBER_PARSE_ERROR,
+    INVALID_FUNCTION_ERROR,
+    TOO_FEW_ARGS_ERROR,
+};
+
 int should_quit(char* input)
 {
     // we got EOF, quit
@@ -41,7 +48,6 @@ void process_token(char* token, TokenStack* stack)
     {
         make_calc_func(&func, subtract, 2, 1);      
         call_calc_func(&func, stack);
-        
     }
     else if (strcmp(token, "*") == 0)
     {
@@ -76,10 +82,19 @@ void process_token(char* token, TokenStack* stack)
     else
     {
         //FIXME handle error of parsing
-        value val = strtod(token, NULL);
-        /* printf("pushing %f to %u\n", val, stack); */
-        push_token(stack, val);
+        char* err = NULL;
+        value val = strtod(token, &err);
+        if (err == NULL)
+        {
+            printf("Unable to parse %s as a number", token);
+        }
+        else
+        {
+            /* printf("pushing %f to %u\n", val, stack); */
+            push_token(stack, val);
+        }
     }
+    // You shouldn't be here.
 }
 
 /*
