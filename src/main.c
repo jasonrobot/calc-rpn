@@ -111,7 +111,10 @@ int get_input(TokenStack* stack) {
     {
         printf("%s\n", tokens[i]);
         process_token(tokens[i], stack);
+        free(tokens[i]);
     }
+
+    free(tokens);
 
     return 0;
 }
@@ -128,6 +131,6 @@ int main(int argc, char* argv[])
         print_stack(token_stack);
         quit = get_input(token_stack);
     }
-  
+
     return EXIT_SUCCESS;
 }
