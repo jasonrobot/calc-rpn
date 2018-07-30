@@ -37,57 +37,14 @@ int should_quit(char* input)
 
 void process_token(char* token, TokenStack* stack, FuncHashMap* function_map)
 {
-    //token is a function
-    /*
-    if (strcmp(token, "+") == 0)
-    {
-        make_calc_func(&func, add, 2, 1);      
-        call_calc_func(&func, stack);
-    }
-    else if (strcmp(token, "-") == 0)
-    {
-        make_calc_func(&func, subtract, 2, 1);      
-        call_calc_func(&func, stack);
-    } 
-*/
+
     CalcFunc *func_ptr = NULL;
-    func_ptr = hash_get(function_map ,token);
+    func_ptr = hash_get(function_map, token);
     if (func_ptr != NULL)
     {
+        //token is a function
         call_calc_func(func_ptr, stack);
     }
-    /*
-    else if (strcmp(token, "*") == 0)
-    {
-        make_calc_func(&func, multiply, 2, 1);      
-        call_calc_func(&func, stack);
-    }
-    else if (strcmp(token, "/") == 0)
-    {
-        make_calc_func(&func, divide, 2, 1);      
-        call_calc_func(&func, stack);        
-    }
-    else if (strcmp(token, "swap") == 0)
-    {
-        make_calc_func(&func, swap, 2, 1);      
-        call_calc_func(&func, stack);
-    }
-    else if (strcmp(token, "drop") == 0)
-    {
-        make_calc_func(&func, drop, 1, 0);
-        call_calc_func(&func, stack);
-    }
-    else if (strcmp(token, "clear") == 0)
-    {
-        make_calc_func(&func, drop, stack_size(stack), 0);
-        call_calc_func(&func, stack);
-    }
-    else if (strcmp(token, "dup") == 0)
-    {
-        make_calc_func(&func, dup, 1, 2);
-        call_calc_func(&func, stack);        
-    }
-    */
     else
     {
         //FIXME handle error of parsing
@@ -132,28 +89,28 @@ int get_input(char** tokens) {
 void setup_functions(FuncHashMap* map)
 {
     CalcFunc* func = NULL;
-    make_calc_func(add, 2, 1);      
+    func = make_calc_func(add, 2, 1);      
     hash_put(map, "+", func);
     
-    make_calc_func(subtract, 2, 1);      
+    func = make_calc_func(subtract, 2, 1);      
     hash_put(map, "-", func);
 
-    make_calc_func(multiply, 2, 1);      
+    func = make_calc_func(multiply, 2, 1);      
     hash_put(map, "*", func);
 
-    make_calc_func(divide, 2, 1);      
+    func = make_calc_func(divide, 2, 1);      
     hash_put(map, "/", func);
 
-    make_calc_func(swap, 2, 1);      
+    func = make_calc_func(swap, 2, 2);      
     hash_put(map, "swap", func);
 
-    make_calc_func(drop, 1, 0);      
+    func = make_calc_func(drop, 1, 0);      
     hash_put(map, "drop", func);
 
-    make_calc_func(drop, 0, 0);
+    func = make_calc_func(drop, 0, 0);
     hash_put(map, "clear", func);
 
-    make_calc_func(dup, 1, 2);      
+    func = make_calc_func(dup, 1, 2);      
     hash_put(map, "dup", func);
 }
 
