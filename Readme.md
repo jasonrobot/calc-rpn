@@ -22,9 +22,8 @@ If you enter an operation or function, it'll pop its args off the stack and push
 
 ## Functions
 
-### +, -, *, /
-
-These work as expected
+* +, -, *, /
+These all work as expected
 
 * drop - pops and discards from the stack
 * swap - pops two values and pushes them back on in reversed order
