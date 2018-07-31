@@ -1,4 +1,5 @@
 #include "stdlib.h"
+#include "math.h"
 
 #include "token_stack.h"
 #include "calc_functions.h"
@@ -82,6 +83,34 @@ int multiply(value a, value b, value* ret)
 int divide(value a, value b, value* ret)
 {
     *ret = a / b;
+    return EXIT_SUCCESS;
+}
+
+int modulo(value a, value b, value* ret)
+{
+    if (a != floor(a) || b != floor(b))
+    {
+        return EXIT_FAILURE;
+    }
+    *ret = (int) floor(a) % (int) floor(b);
+    return EXIT_SUCCESS;
+}
+
+int power(value a, value b, value* ret)
+{
+    *ret = pow(a, b);
+    return EXIT_SUCCESS;
+}
+
+int root(value a, value b, value* ret)
+{
+    *ret = pow(a, -b);
+    return EXIT_SUCCESS;
+}
+
+int square_root(value a, value* ret)
+{
+    *ret = sqrt(a);
     return EXIT_SUCCESS;
 }
 

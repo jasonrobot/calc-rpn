@@ -25,6 +25,10 @@ int add(value, value, value*);
 int subtract(value, value, value*);
 int multiply(value, value, value*);
 int divide(value, value, value*);
+int modulo(value, value, value*);
+int power(value, value, value*);
+int root(value, value, value*);
+int square_root(value, value*);
 
 int swap(value, value, value*);
 int drop();

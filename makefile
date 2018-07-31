@@ -22,8 +22,8 @@ TEST_BIN := run-tests
 
 CFLAGS := -c -g -Wall
 
-LDFLAGS := -g -Wall -lreadline
-TEST_LDFLAGS := -lcheck
+LDFLAGS := -g -Wall -lreadline -lm
+TEST_LDFLAGS := -lcheck -lm
 
 # build the main set of object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c

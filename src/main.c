@@ -89,7 +89,7 @@ void setup_functions(FuncHashMap* map)
     CalcFunc* func = NULL;
     func = make_calc_func(add, 2, 1, "+");
     hash_put(map, func->name, func);
-    
+
     func = make_calc_func(subtract, 2, 1, "-");      
     hash_put(map, func->name, func);
 
@@ -97,6 +97,20 @@ void setup_functions(FuncHashMap* map)
     hash_put(map, func->name, func);
 
     func = make_calc_func(divide, 2, 1, "/");
+    hash_put(map, func->name, func);
+
+    func = make_calc_func(modulo, 2, 1, "mod");
+    hash_put(map, func->name, func);
+    
+    func = make_calc_func(power, 2, 1, "pow");
+    hash_put(map, func->name, func);
+    hash_put(map, "^", func);
+    hash_put(map, "**", func);
+
+    func = make_calc_func(root, 2, 1, "root");
+    hash_put(map, func->name, func);
+
+    func = make_calc_func(square_root, 1, 1, "sqrt");
     hash_put(map, func->name, func);
 
     func = make_calc_func(swap, 2, 2, "swap");
