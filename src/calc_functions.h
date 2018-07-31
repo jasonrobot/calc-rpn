@@ -18,7 +18,7 @@ typedef struct CalcFunc_s
     int (*logic)();
 } CalcFunc;
 
-void make_calc_func(CalcFunc* calc_func, int (*function)(), int argc, int retc);
+CalcFunc* make_calc_func(int (*function)(), int argc, int retc, char* name);
 void call_calc_func(CalcFunc* func, TokenStack* stack);
 
 int add(value, value, value*);
