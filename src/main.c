@@ -37,7 +37,6 @@ int should_quit(char* input)
 
 void process_token(char* token, TokenStack* stack, FuncHashMap* function_map)
 {
-
     CalcFunc *func_ptr = NULL;
     func_ptr = hash_get(function_map, token);
     if (func_ptr != NULL)
@@ -79,7 +78,6 @@ int get_input(char** tokens) {
     if (tokens == NULL)
     {
         printf("failed to parse\n");
-        /* return EXIT_FAILURE; */
         return 0;
     }    
 
@@ -89,29 +87,29 @@ int get_input(char** tokens) {
 void setup_functions(FuncHashMap* map)
 {
     CalcFunc* func = NULL;
-    func = make_calc_func(add, 2, 1);      
-    hash_put(map, "+", func);
+    func = make_calc_func(add, 2, 1, "+");
+    hash_put(map, func->name, func);
     
-    func = make_calc_func(subtract, 2, 1);      
-    hash_put(map, "-", func);
+    func = make_calc_func(subtract, 2, 1, "-");      
+    hash_put(map, func->name, func);
 
-    func = make_calc_func(multiply, 2, 1);      
-    hash_put(map, "*", func);
+    func = make_calc_func(multiply, 2, 1, "*");
+    hash_put(map, func->name, func);
 
-    func = make_calc_func(divide, 2, 1);      
-    hash_put(map, "/", func);
+    func = make_calc_func(divide, 2, 1, "/");
+    hash_put(map, func->name, func);
 
-    func = make_calc_func(swap, 2, 2);      
-    hash_put(map, "swap", func);
+    func = make_calc_func(swap, 2, 2, "swap");
+    hash_put(map, func->name, func);
 
-    func = make_calc_func(drop, 1, 0);      
-    hash_put(map, "drop", func);
+    func = make_calc_func(drop, 1, 0, "drop");
+    hash_put(map, func->name, func);
 
-    func = make_calc_func(drop, 0, 0);
-    hash_put(map, "clear", func);
+    func = make_calc_func(drop, 0, 0, "clear");
+    hash_put(map, func->name, func);
 
-    func = make_calc_func(dup, 1, 2);      
-    hash_put(map, "dup", func);
+    func = make_calc_func(dup, 1, 2, "dup");
+    hash_put(map, func->name, func);
 }
 
 int main(int argc, char* argv[])
