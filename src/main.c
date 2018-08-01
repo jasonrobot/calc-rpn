@@ -35,28 +35,52 @@ int should_quit(char* input)
     return 0;
 }
 
+int could_be_num(char* str)
+{
+    double parsed = strtod(str, NULL);
+    //if its not a 0, its a number guaranteed
+    if (parsed != 0)
+    {
+        return 1;
+    }
+    else 
+    {
+        // if it is a 0
+        // if the string contains anything but '-', '0', and '.', its not a true 0
+        for (int i = 0; str[i] != '\0'; i++)
+        {
+            if (str[i] != '-' && str[i] != '0' && str[i] != '.')
+            {
+                return 0;
+            }
+        }
+    }
+    // it wasnt 0, but wasn't not 0.......
+    return 0;
+}
+
 void process_token(char* token, TokenStack* stack, FuncHashMap* function_map)
 {
-    CalcFunc *func_ptr = NULL;
-    func_ptr = hash_get(function_map, token);
-    if (func_ptr != NULL)
+    //try parsing numbers first
+    if (could_be_num(token))
     {
-        //token is a function
-        call_calc_func(func_ptr, stack);
+        char* err = NULL;
+        value val = strtod(token, &err);
+        push_token(stack, val);
     }
     else
     {
-        //FIXME handle error of parsing
-        char* err = NULL;
-        value val = strtod(token, &err);
-        if (err == NULL)
+        //try to parse a function
+        CalcFunc *func_ptr = NULL;
+        func_ptr = hash_get(function_map, token);
+        if (func_ptr != NULL)
         {
-            printf("Unable to parse %s as a number", token);
+            //token is a function
+            call_calc_func(func_ptr, stack);
         }
         else
         {
-            /* printf("pushing %f to %u\n", val, stack); */
-            push_token(stack, val);
+            printf("Undefined symbol: %s", token);
         }
     }
     // You shouldn't be here.
