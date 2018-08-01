@@ -91,10 +91,9 @@ void process_token(char* token, TokenStack* stack, FuncHashMap* function_map)
  *
  * @return the number of tokens read
  */
-int get_input(char** tokens) {
-    char* line = readline(": ");
+int get_input(char* line, char** tokens) {
     
-    printf("\n%s\n", line);
+    /* printf("\n%s\n", line); */
 
     int token_count = 0;
     token_count = tokenize(line, tokens);
@@ -166,12 +165,15 @@ int main(int argc, char* argv[])
         char* tokens[256];
         printf("stack size is %d\n", stack_size(token_stack));
         print_stack(token_stack);
+
+        char* line = readline(": ");
         
-        int token_count = get_input(tokens);
-        if (should_quit(tokens[0]))
+        if (should_quit(line))
         {
             return EXIT_SUCCESS;
         }
+         
+        int token_count = get_input(line, tokens);
         if ( token_count > 0)
         {
             for (int i = 0; i < token_count; i++)
