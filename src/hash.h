@@ -24,5 +24,6 @@ size_t hash_hash(char* key, size_t size);
 void hash_put(FuncHashMap*, char* name, CalcFunc* func);
 CalcFunc* hash_get(FuncHashMap*, char* name);
 
+void delete(FuncHashMap*);
 
 #endif

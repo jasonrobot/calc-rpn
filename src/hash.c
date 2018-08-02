@@ -51,3 +51,29 @@ CalcFunc* hash_get(FuncHashMap* map, char* key)
     }
     return entry->func;
 }
+
+void delete_map_entries(FuncMapEntry* entry)
+{
+    if (entry->next != NULL)
+    {
+        return delete_map_entries(entry->next);
+    }
+    free(entry);
+}
+
+/*
+ * Free all the memory allocated for the hashmap
+ */ 
+void delete(FuncHashMap* map)
+{
+    //just dont bother, and let the process end. That's your best bet
+    for (size_t i = 0; i < map->size; i++)
+    {
+        if (map->map[i] != NULL)
+        {
+            //delete the linked list stored here recursively
+            delete_map_entries(map->map[i]);
+        }
+    }
+}
+

@@ -77,3 +77,11 @@ END_TEST
 START_TEST(test_get_collided_hashes)
 {}
 END_TEST
+
+/*
+ * Dont know how to check for memory usage/leaks, but we can at least
+ * test that the functions work.
+ */
+START_TEST(test_delete_hash)
+{}
+END_TEST
