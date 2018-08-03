@@ -31,10 +31,13 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 # build the main binary
 $(BIN_FILE): $(OBJ_FILES)
-	$(CC) $(LDFLAGS) -o $(BIN_FILE) $^
+	$(CC) -o $(BIN_FILE) $^ $(LDFLAGS)
+
+debug: CFLAGS += -DDEBUG
+debug: $(BIN_FILE)
 
 # build main binary and run in gdb
-debug: $(BIN_FILE)
+debugger: $(BIN_FILE)
 	$(DEBUGGER) $<
 
 # Build test binary directly from sources

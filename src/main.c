@@ -80,7 +80,7 @@ void process_token(char* token, TokenStack* stack, FuncHashMap* function_map)
         }
         else
         {
-            printf("Undefined symbol: %s", token);
+            printf("Undefined symbol: %s\n", token);
         }
     }
     // You shouldn't be here.
@@ -151,6 +151,10 @@ void setup_functions(FuncHashMap* map)
 
 int main(int argc, char* argv[])
 {
+    #ifdef DEBUG
+    printf("you're debugging!\n");
+    #endif
+    
     // set up all the initial variables
     int quit = 0;
     TokenStack* token_stack = new_token_stack();
@@ -163,7 +167,9 @@ int main(int argc, char* argv[])
     {
         //if you're inputting more than 256 tokens at a time, I pity you
         char* tokens[256];
+        #ifdef DEBUG
         printf("stack size is %d\n", stack_size(token_stack));
+        #endif
         print_stack(token_stack);
 
         char* line = readline(": ");
@@ -178,7 +184,9 @@ int main(int argc, char* argv[])
         {
             for (int i = 0; i < token_count; i++)
             {
+                #ifdef DEBUG
                 printf("%s\n", tokens[i]);
+                #endif
                 process_token(tokens[i], token_stack, &function_map);
                 free(tokens[i]);
             }
