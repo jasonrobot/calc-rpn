@@ -138,15 +138,19 @@ void setup_functions(FuncHashMap* map)
 
     func = make_calc_func(swap, 2, 2, "swap");
     hash_put(map, func->name, func);
+    hash_put(map, "s", func);
 
     func = make_calc_func(drop, 1, 0, "drop");
     hash_put(map, func->name, func);
+    hash_put(map, "d", func);
 
     func = make_calc_func(drop, 0, 0, "clear");
     hash_put(map, func->name, func);
+    hash_put(map, "c", func);
 
     func = make_calc_func(dup, 1, 2, "dup");
     hash_put(map, func->name, func);
+    hash_put(map, ".", func);
 }
 
 int main(int argc, char* argv[])
