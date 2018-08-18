@@ -21,7 +21,7 @@ int should_quit(char* input)
     {
         return 1;
     }
-        
+
     if (strlen(input) == 0)
     {
         return 0;
@@ -43,7 +43,7 @@ int could_be_num(char* str)
     {
         return 1;
     }
-    else 
+    else
     {
         // if it is a 0
         // if the string contains anything but '-', '0', and '.', its not a true 0
@@ -92,7 +92,7 @@ void process_token(char* token, TokenStack* stack, FuncHashMap* function_map)
  * @return the number of tokens read
  */
 int get_input(char* line, char** tokens) {
-    
+
     /* printf("\n%s\n", line); */
 
     int token_count = 0;
@@ -102,7 +102,7 @@ int get_input(char* line, char** tokens) {
     {
         printf("failed to parse\n");
         return 0;
-    }    
+    }
 
     return token_count;
 }
@@ -113,7 +113,7 @@ void setup_functions(FuncHashMap* map)
     func = make_calc_func(add, 2, 1, "+");
     hash_put(map, func->name, func);
 
-    func = make_calc_func(subtract, 2, 1, "-");      
+    func = make_calc_func(subtract, 2, 1, "-");
     hash_put(map, func->name, func);
 
     func = make_calc_func(multiply, 2, 1, "*");
@@ -124,7 +124,7 @@ void setup_functions(FuncHashMap* map)
 
     func = make_calc_func(modulo, 2, 1, "mod");
     hash_put(map, func->name, func);
-    
+
     func = make_calc_func(power, 2, 1, "pow");
     hash_put(map, func->name, func);
     hash_put(map, "^", func);
@@ -158,7 +158,7 @@ int main(int argc, char* argv[])
     #ifdef DEBUG
     printf("you're debugging!\n");
     #endif
-    
+
     // set up all the initial variables
     int quit = 0;
     TokenStack* token_stack = new_token_stack();
@@ -177,12 +177,12 @@ int main(int argc, char* argv[])
         print_stack(token_stack);
 
         char* line = readline(": ");
-        
+
         if (should_quit(line))
         {
             return EXIT_SUCCESS;
         }
-         
+
         int token_count = get_input(line, tokens);
         if ( token_count > 0)
         {

@@ -1,5 +1,6 @@
 #include "stdlib.h"
 #include "math.h"
+#include "string.h"
 
 #include "token_stack.h"
 #include "calc_functions.h"
@@ -19,9 +20,16 @@ CalcFunc* make_calc_func(int (*function)(), int argc, int retc, char* name)
  *
  * @param func The func object to call.
  * @param stack The token stack to get args from and put retvals to.
- */ 
+ */
 void call_calc_func(CalcFunc* func, TokenStack* stack)
 {
+    // Special case for the 'clear' function
+    if (strncmp(func->name, "clear", 5) == 0)
+    {
+        stack->top_idx = 0;
+        return;
+    }
+
     value ret_vals[func->retc];
     /* int error = func->logic(pop_token(stack), pop_token(stack), &ret_vals); */
     //TODO handle too few args
@@ -124,7 +132,7 @@ int swap(value a, value b, value* ret)
 /*
  * An empty function used for dropping values.
  * Will drop any number of args, just specify how many in argc of the CalcFunc
- */ 
+ */
 int drop()
 {
     //doesnt actually do anything

@@ -17,7 +17,7 @@ TEST_SRC_FILES := $(patsubst $(MAIN_FILE), , $(wildcard $(SRC_DIR)/*.c)) $(wildc
 # this includes test_main.c
 TEST_FILES := $(wildcard $(TEST_DIR)/*.c)
 
-BIN_FILE := calc-rpn
+BIN_FILE := rpncalc
 TEST_BIN := run-tests
 
 CFLAGS := -c -g -Wall
